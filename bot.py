@@ -6,7 +6,7 @@ import asyncio
 import config
 from stopgame import StopGame
 
-sg = StopGame('lastkey.txt')
+sg = StopGame()
 client = commands.Bot(command_prefix='.')
 
 @client.event
@@ -40,8 +40,9 @@ async def postTest(wait_for):
                 except Exception as error:
                     print(error)    
 
-                sg.update_lastkey(nfo['id'])   
+                sg.update_lastkey(nfo['id']) 
+                await client.get_channel(config.Post_Channel).send(config.lastkey)  
 # RUN
 loop = asyncio.get_event_loop()
-loop.create_task(postTest(3600))
-client.run(config.TOKEN+'HxdA')
+loop.create_task(postTest(1500))
+client.run(config.TOKEN+ 'HxdA')

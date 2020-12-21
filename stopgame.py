@@ -1,4 +1,5 @@
 import re
+import config
 import os.path
 import requests
 from bs4 import BeautifulSoup as BS
@@ -7,19 +8,10 @@ from urllib.parse import urlparse
 class StopGame:
 	host = 'https://stopgame.ru'
 	url = 'https://stopgame.ru/review/new'
-	lastkey_file = ""
 	lastkey = ""
 
-	def __init__(self, lastkey_file):
-		self.lastkey_file = lastkey_file
-
-		if(os.path.exists(lastkey_file)):
-			self.lastkey = open(lastkey_file, 'r').read()
-		else:
-			f = open(lastkey_file, 'w')
-			self.lastkey = self.get_lastkey()
-			f.write(self.lastkey)
-			f.close()
+	def __init__(self):
+		self.lastkey = config.lastkey
 
 	def new_games(self):
 		r = requests.get(self.url)
@@ -94,11 +86,6 @@ class StopGame:
 
 	def update_lastkey(self, new_key):
 		self.lastkey = new_key
-
-		with open(self.lastkey_file, "r+") as f:
-			data = f.read()
-			f.seek(0)
-			f.write(str(new_key))
-			f.truncate()
+		config.lastkey = str(new_key)
 
 		return new_key
